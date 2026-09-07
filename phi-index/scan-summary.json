@@ -1,0 +1,41 @@
+{
+  "schema": "c13b0-index/v1",
+  "generated_by": "ChatGPT GitHub connector scan",
+  "scan_mode": "repository-metadata",
+  "owner": "www-infinity4",
+  "repositories_returned_by_owner_listing": 100,
+  "indexer_repo_confirmed_separately": true,
+  "file_level_scan_complete": false,
+  "capability_verification_complete": false,
+  "note": "This is a real GitHub connector scan result, not a remembered/manual inventory. The connector owner listing returned exactly 100 repositories and an empty second page. C13b0-Indexer was separately confirmed. File-level capability verification is the next scan layer, so no repository is promoted to CAN_DO solely from its name or README description.",
+  "carry_forward_contract": [
+    "preview_artwork",
+    "open_graph",
+    "x_large_card",
+    "share_post",
+    "unified_wallet",
+    "star_coin",
+    "share_rewards",
+    "durable_ledger",
+    "history",
+    "mobile_first",
+    "canonical",
+    "infinity_manifest"
+  ],
+  "priority_capability_families": [
+    "core-platform",
+    "search-index",
+    "wallet-token-economy",
+    "image-generation",
+    "image-analysis",
+    "video-media",
+    "audio-music",
+    "3d-spatial",
+    "ai-models",
+    "games",
+    "engineering-robotics",
+    "science-research",
+    "web-infrastructure"
+  ],
+  "next_scan_layer": "Fetch repository trees and high-value source/manifests, extract reusable entry points, dependencies, runtime, inputs/outputs and carry-forward evidence."
+}
