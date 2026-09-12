@@ -1,0 +1,66 @@
+{
+  "schema": "c13b0-capability-routing/v1",
+  "updated": "2026-09-12",
+  "providers": [
+    {
+      "repo": "www-infinity4/artemis",
+      "role": "android-device-automation-and-regression",
+      "status": "NEEDS_TEST",
+      "routes": [
+        {
+          "target": "www-infinity4/C13b0",
+          "adapter": "android-test"
+        },
+        {
+          "target": "www-infinity4/Infinity-Phi",
+          "adapter": "android-test"
+        },
+        {
+          "target": "www-infinity4/TV-Database",
+          "adapter": "android-test"
+        },
+        {
+          "target": "www-infinity4/FOX",
+          "adapter": "android-test"
+        },
+        {
+          "target": "www-infinity4/StarLens",
+          "adapter": "android-test"
+        }
+      ]
+    },
+    {
+      "repo": "www-infinity4/gods-eye-view",
+      "role": "geospatial-and-live-world-visualization",
+      "status": "NEEDS_TEST",
+      "routes": [
+        {
+          "target": "www-infinity4/Omniscape",
+          "adapter": "primary-spatial"
+        },
+        {
+          "target": "www-infinity4/Omni-Presence",
+          "adapter": "live-layer"
+        },
+        {
+          "target": "www-infinity4/Omni-Phi",
+          "adapter": "spatial-research"
+        },
+        {
+          "target": "www-infinity4/StarLens",
+          "adapter": "space-layer"
+        },
+        {
+          "target": "www-infinity4/Theater",
+          "adapter": "spatial-storytelling"
+        }
+      ]
+    }
+  ],
+  "rules": [
+    "Retrieve the provider manifest before proposing integration.",
+    "Use an adapter at the target repository boundary; do not copy a provider wholesale.",
+    "Keep maturity at NEEDS_TEST until runtime evidence is recorded.",
+    "Apply every provider boundary and credential rule."
+  ]
+}
