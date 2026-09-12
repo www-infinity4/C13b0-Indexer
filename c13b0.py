@@ -70,7 +70,7 @@ PHI_STAGE = {
 INTERESTING_NAMES = {
     "readme.md", "package.json", "pyproject.toml", "requirements.txt", "setup.py",
     "cargo.toml", "go.mod", "pom.xml", "build.gradle", "infinity-site.json",
-    "index.html", "manifest.json", "vercel.json", "wrangler.toml"
+    "index.html", "manifest.json", "infinity-capabilities.json", "vercel.json", "wrangler.toml"
 }
 TEXT_EXTS = {".md", ".txt", ".json", ".toml", ".yaml", ".yml", ".py", ".js", ".jsx", ".ts", ".tsx", ".html", ".css"}
 SKIP_PARTS = {"node_modules", "vendor", "dist", "build", ".next", ".git", "coverage", "__pycache__", ".cache", "models", "weights"}
@@ -197,6 +197,7 @@ def scan_repo(repo: dict, token: str | None):
     ranked = sorted(((relevance(x.get("path", "")), x) for x in blobs), key=lambda x: x[0], reverse=True)
     selected = [x for score, x in ranked if score >= 0][:MAX_FILES_PER_REPO]
     chunks = []
+    capability_manifest = None
     corpus_parts = [repo.get("name", ""), repo.get("description") or "", " ".join(repo.get("topics") or [])]
     for item in selected:
         path = item["path"]
@@ -204,6 +205,11 @@ def scan_repo(repo: dict, token: str | None):
         if not text:
             continue
         corpus_parts.append(text[:40_000])
+        if Path(path).name.lower() == "infinity-capabilities.json":
+            try:
+                capability_manifest = json.loads(text)
+            except json.JSONDecodeError:
+                capability_manifest = {"schema": "invalid", "error": "Invalid infinity-capabilities.json"}
         excerpt = re.sub(r"\s+", " ", text).strip()[:700]
         if excerpt:
             chunks.append({"path": path, "sha": item.get("sha"), "score": relevance(path), "excerpt": excerpt})
@@ -226,6 +232,10 @@ def scan_repo(repo: dict, token: str | None):
         "status": status_for(repo, paths, corpus),
         "carry_forward": carry_forward_state(corpus, paths),
         "important_chunks": chunks,
+        "capability_manifest": capability_manifest,
+        "declared_capabilities": (capability_manifest or {}).get("capabilities", []),
+        "alignments": (capability_manifest or {}).get("alignments", []),
+        "boundaries": (capability_manifest or {}).get("boundaries", []),
     }
 
 
@@ -248,7 +258,7 @@ def write_indexes(records: list[dict]):
         "repository_count": len(records),
         "status_counts": dict(Counter(r["status"] for r in records)),
         "carry_forward_contract": list(CARRY_FORWARD),
-        "repositories": [{k: r[k] for k in ("repo", "url", "categories", "phi_stage", "status")} for r in records],
+        "repositories": [{k: r[k] for k in ("repo", "url", "categories", "phi_stage", "status", "alignments")} for r in records],
     }
     (OUT / "catalog.json").write_text(json.dumps(catalog, indent=2), encoding="utf-8")
     with (OUT / "search-index.jsonl").open("w", encoding="utf-8") as f:
@@ -258,7 +268,7 @@ def write_indexes(records: list[dict]):
     frontend = []
     for r in records:
         missing = [k for k, v in r["carry_forward"].items() if v["status"] == "MISSING"]
-        frontend.append({"repo": r["repo"], "status": r["status"], "categories": r["categories"], "phi_stage": r["phi_stage"], "missing_carry_forward": missing, "top_chunks": r["important_chunks"][:8]})
+        frontend.append({"repo": r["repo"], "status": r["status"], "categories": r["categories"], "phi_stage": r["phi_stage"], "missing_carry_forward": missing, "top_chunks": r["important_chunks"][:8], "declared_capabilities": r.get("declared_capabilities", []), "alignments": r.get("alignments", []), "boundaries": r.get("boundaries", [])})
     (OUT / "frontend-index.json").write_text(json.dumps(frontend, indent=2), encoding="utf-8")
 
 
