@@ -36,6 +36,8 @@ The scan writes `phi-index/` containing:
 
 Large repositories are inspected through GitHub trees and selected useful text files rather than cloned wholesale.
 
+Forks can publish an `infinity-capabilities.json` manifest. The scanner treats its declared capabilities, target-repository alignments, runtime requirements, and safety boundaries as first-class routing data. Curated routes that must be available before a full scan live in `capability-seeds/fork-alignments.json`.
+
 ## Infinity carry-forward contract
 
 When an Infinity webpage is built or substantially repaired, the working process should automatically account for established common infrastructure rather than waiting for it to be requested again later:
